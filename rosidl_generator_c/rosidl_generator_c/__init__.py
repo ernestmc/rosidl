@@ -20,6 +20,8 @@ from rosidl_cmake import get_newest_modification_time
 from rosidl_cmake import read_generator_arguments
 from rosidl_parser import parse_message_file
 
+def mydebug(txt):
+    print("DEBUG: ",txt)
 
 def generate_c(generator_arguments_file):
     args = read_generator_arguments(generator_arguments_file)
@@ -48,9 +50,13 @@ def generate_c(generator_arguments_file):
                     convert_camel_case_to_lower_case_underscore(spec.base_type.type))
                 data = {'spec': spec, 'subfolder': subfolder}
                 data.update(functions)
+                mydebug("Currently processing template file...")
+                mydebug(template_file)
+                mydebug(generated_file)
                 expand_template(
                     template_file, data, generated_file,
                     minimum_timestamp=latest_target_timestamp)
+                mydebug("Finished!")
     return 0
 
 

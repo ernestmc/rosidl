@@ -14,6 +14,7 @@
 
 import os
 import re
+import pprint
 
 PACKAGE_NAME_MESSAGE_TYPE_SEPARATOR = '/'
 COMMENT_DELIMITER = '#'
@@ -55,6 +56,15 @@ VALID_MESSAGE_NAME_PATTERN = re.compile('^[A-Z][A-Za-z0-9]*$')
 # relaxed patterns used for compatibility with ROS 1 messages
 # VALID_MESSAGE_NAME_PATTERN = re.compile('^[A-Za-z][A-Za-z0-9]*$')
 VALID_CONSTANT_NAME_PATTERN = re.compile('^[A-Z]([A-Z0-9_]?[A-Z0-9]+)*$')
+
+
+def mydebug(txt):
+    fname = "/tmp/parser.txt"
+    if os.path.isfile(fname):
+        f = open(fname, "a")
+    else:
+        f = open(fname, "w")
+    print("DEBUG: ", txt, file=f)
 
 
 class InvalidSpecification(Exception):
@@ -367,7 +377,7 @@ class MessageSpecification(object):
             raise ValueError(
                 'the constants iterable contains duplicate names: %s' %
                 ', '.join(sorted(duplicate_constant_names)))
-
+        
     def __eq__(self, other):
         if not other or not isinstance(other, MessageSpecification):
             return False
@@ -381,6 +391,7 @@ class MessageSpecification(object):
 def parse_message_file(pkg_name, interface_filename):
     basename = os.path.basename(interface_filename)
     msg_name = os.path.splitext(basename)[0]
+    mydebug("Visited parse_message_file\n");
     with open(interface_filename, 'r') as h:
         return parse_message_string(
             pkg_name, msg_name, h.read())
@@ -389,6 +400,8 @@ def parse_message_file(pkg_name, interface_filename):
 def parse_message_string(pkg_name, msg_name, message_string):
     fields = []
     constants = []
+    
+    mydebug("message= %s / package= %s / name= %s" % (message_string, pkg_name, msg_name))
 
     lines = message_string.splitlines()
     for line in lines:
@@ -416,6 +429,7 @@ def parse_message_string(pkg_name, msg_name, message_string):
             if not default_value_string:
                 default_value_string = None
             try:
+                #mydebug("type= %s / package= %s / field= %s / default_value= %s" % (type_string, pkg_name, field_name, default_value_string))
                 fields.append(Field(
                     Type(type_string, context_package_name=pkg_name),
                     field_name, default_value_string))
@@ -430,7 +444,7 @@ def parse_message_string(pkg_name, msg_name, message_string):
             name = name.rstrip()
             value = value.lstrip()
             constants.append(Constant(type_string, name, value))
-
+    
     return MessageSpecification(pkg_name, msg_name, fields, constants)
 
 
