@@ -57,7 +57,7 @@
  */
 
 // TODO(wjwwood): Error check malloc.
-#define ROSIDL_GENERATE_STATIC_ARRAY(ContainingMsg, Field, Type, Size) \
+#define ROSIDL_GENERATE_STATIC_ARRAY(ContainingMsg, Field, Size) \
   typedef Type ContainingMsg ## __ ## Field ## _t[Size]; \
   typedef struct ROSIDL_Array__ ## ContainingMsg ## __ ## Field \
   { \
