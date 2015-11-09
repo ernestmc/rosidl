@@ -44,8 +44,13 @@ for field in spec.fields:
     if field.type.is_array and field.type.array_size is not None:
         # TODO the generated code fails for non primitive types and needs to be fixed and reenabled
         if field.type.is_primitive_type():
-            print('ROSIDL_GENERATE_STATIC_ARRAY(%s, %s, %s);' %
-            (c_full_name, field.name, field.type.array_size))
+            # pass along the C type
+            print('ROSIDL_GENERATE_STATIC_ARRAY(%s, %s, %s, %s);' %
+            (c_full_name, field.name, MSG_TYPE_TO_C[field.type.type], field.type.array_size))
+        else:
+            # complex type: pass the message name as the type
+            print('ROSIDL_GENERATE_STATIC_ARRAY(%s, %s, %s, %s);' %
+            (c_full_name, field.name, field.type.type, field.type.array_size))
 }@
 
 // message struct
