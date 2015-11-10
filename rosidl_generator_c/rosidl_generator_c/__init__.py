@@ -20,8 +20,10 @@ from rosidl_cmake import get_newest_modification_time
 from rosidl_cmake import read_generator_arguments
 from rosidl_parser import parse_message_file
 
+
 def mydebug(txt):
-    print("DEBUG: ",txt)
+    print("DEBUG: ", txt)
+
 
 def generate_c(generator_arguments_file):
     args = read_generator_arguments(generator_arguments_file)
