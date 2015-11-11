@@ -8,6 +8,8 @@ find_package(ament_cmake_python REQUIRED)
 ament_export_dependencies(rosidl_cmake)
 ament_export_include_directories(include)
 
+include_directories(include)
+
 ament_python_install_package(${PROJECT_NAME})
 
 if(AMENT_ENABLE_TESTING)
